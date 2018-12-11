@@ -1,22 +1,10 @@
-FROM jboss/wildfly:12.0.0.Final
+FROM micophi/dev-wildfly:testing
+
+ENV ANACONDA_URL=https://repo.anaconda.com/archive/Anaconda3-5.3.1-Linux-x86_64.sh
+
+RUN curl -L $ANACONDA_URL -o ~/install-anaconda.sh
 
 USER root
-RUN yum install epel-release -y
-RUN yum install gdal -y
+RUN chmod +x install-anaconda.sh
+RUN ./install-anaconda.sh -b -p /opt/Anaconda3
 USER jboss
-
-RUN mkdir -p /opt/jboss/wildfly/modules/org/postgresql/main/
-ADD module.xml /opt/jboss/wildfly/modules/org/postgresql/main/
-
-RUN curl -L https://jdbc.postgresql.org/download/postgresql-42.2.5.jar -o /opt/jboss/wildfly/modules/org/postgresql/main/postgresql-42.2.5.jar
-
-#Enable debug
-RUN echo 'JAVA_OPTS="$JAVA_OPTS -agentlib:jdwp=transport=dt_socket,address=8787,server=y,suspend=n"' >> /opt/jboss/wildfly/bin/standalone.conf
-
-RUN /opt/jboss/wildfly/bin/add-user.sh admin admin1234 --silent
-CMD ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]
-
-
-
-
-
