@@ -2,7 +2,7 @@ FROM jboss/wildfly:12.0.0.Final
 
 USER root
 RUN yum install epel-release -y
-RUN yum install gdal -y
+RUN yum install gdal bzip2 -y
 USER jboss
 
 RUN mkdir -p /opt/jboss/wildfly/modules/org/postgresql/main/
