@@ -5,6 +5,8 @@ RUN yum install epel-release -y
 RUN yum install gdal bzip2 -y
 USER jboss
 
+ENV LANG C.UTF-8
+
 RUN mkdir -p /opt/jboss/wildfly/modules/org/postgresql/main/
 ADD module.xml /opt/jboss/wildfly/modules/org/postgresql/main/
 
