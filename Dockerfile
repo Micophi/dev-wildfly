@@ -3,7 +3,6 @@ FROM micophi/dev-wildfly:latest
 USER root
 RUN yum -y update
 RUN yum install -y python36 
-USER jboss
 
 ENV LANG en_US.UTF-8
 
