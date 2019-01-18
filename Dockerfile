@@ -4,6 +4,7 @@ USER root
 RUN yum -y update
 RUN yum install -y python36 
 
+RUN yum -y -q reinstall glibc-common
 ENV LANG en_US.UTF-8
 
 # Install Pip from the RPM's internal "ensurepip" module
