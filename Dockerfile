@@ -1,21 +1,27 @@
-FROM jboss/wildfly:12.0.0.Final
+FROM micophi/dev-wildfly:latest
 
 USER root
-RUN yum install epel-release -y
-RUN yum install gdal bzip2 -y
+RUN yum -y update
+RUN yum install -y python36 
 USER jboss
 
-ENV LANG C.UTF-8
+ENV LANG en_US.UTF-8
 
-RUN mkdir -p /opt/jboss/wildfly/modules/org/postgresql/main/
-ADD module.xml /opt/jboss/wildfly/modules/org/postgresql/main/
+# Install Pip from the RPM's internal "ensurepip" module
+RUN python3.6 -m ensurepip
 
-RUN curl -L https://jdbc.postgresql.org/download/postgresql-42.2.5.jar -o /opt/jboss/wildfly/modules/org/postgresql/main/postgresql-42.2.5.jar
+# Create a symlink so it can be called using python3
+RUN ln -s /usr/bin/python3.6 /usr/bin/python3
 
-#Enable debug
-RUN echo 'JAVA_OPTS="$JAVA_OPTS -agentlib:jdwp=transport=dt_socket,address=8787,server=y,suspend=n"' >> /opt/jboss/wildfly/bin/standalone.conf
+# Symlink pip3 into /usr/bin for consistency and ease of use with sudo
+RUN ln -s /usr/local/bin/pip3 /usr/bin/pip3
 
-RUN /opt/jboss/wildfly/bin/add-user.sh admin admin1234 --silent
+# Symlink easy_install3 into /usr/bin for consistency and ease of use with sudo
+RUN ln -s /usr/local/bin/easy_install-3.6 /usr/bin/easy_install3
+
+USER jboss
+
+
 CMD ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]
 
 
